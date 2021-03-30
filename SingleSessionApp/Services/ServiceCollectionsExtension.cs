@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SingleSessionApp.Services
 {
-    public static class IServiceCollectionsExtension
+    public static class ServiceCollectionsExtension
     {
         public static IServiceCollection SetupDependancy(this IServiceCollection services, IConfiguration configuration)
         {
