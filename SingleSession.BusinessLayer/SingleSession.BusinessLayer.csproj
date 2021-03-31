@@ -8,9 +8,4 @@
     <ProjectReference Include="..\SingleSession.DataAccessLayer\SingleSession.DataAccessLayer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Implementation\" />
-    <Folder Include="Interface\" />
-  </ItemGroup>
-
 </Project>
