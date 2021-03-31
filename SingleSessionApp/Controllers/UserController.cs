@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using SingleSession.BusinessLayer.Interface;
 using SingleSession.ModelLayer.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SingleSessionApp.Controllers
@@ -34,7 +37,21 @@ namespace SingleSessionApp.Controllers
                 var user = await _userService.Login(loginModel);
                 if (user != null)
                 {
-                    return RedirectToAction("/", "Home");
+                    var claims = new List<Claim>()
+                    {
+                    new Claim(ClaimTypes.Name,user.FirstName+" "+user.LastName),
+                    new Claim(ClaimTypes.Email,user.Email),
+                    };
+                    var claimIdenties = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimPrincipal = new ClaimsPrincipal(claimIdenties);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal,
+                        new AuthenticationProperties()
+                        {
+                            ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
+                            IsPersistent = true,
+                            AllowRefresh = true
+                        });
+                    return RedirectToAction("", "Home");
                 }
                 ModelState.AddModelError("", "Invalid Credentials");
             }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +27,11 @@ namespace SingleSessionApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(cookie =>
+                {
+                    cookie.LoginPath = "/Login";
+                    cookie.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                });
             services.AddControllersWithViews();
             services.SetupDependancy(Configuration);
         }
@@ -48,6 +54,7 @@ namespace SingleSessionApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
