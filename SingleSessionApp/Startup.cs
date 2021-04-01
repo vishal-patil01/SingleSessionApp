@@ -32,6 +32,10 @@ namespace SingleSessionApp
                     cookie.LoginPath = "/Login";
                     cookie.ExpireTimeSpan = TimeSpan.FromMinutes(10);
                 });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Authentication", policy => policy.Requirements.Add(new CustomAuthenticationHandler()));
+            });
             services.AddControllersWithViews();
             services.SetupDependancy(Configuration);
         }

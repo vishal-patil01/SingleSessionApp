@@ -19,18 +19,18 @@ namespace SingleSessionApp.Controllers
             _logger = logger;
         }
 
-        [Authorize]
+        [Authorize(Policy = "Authentication")]
         public IActionResult Index()
         {
             return View();
         }
 
-        [Authorize]
+        [Authorize(Policy = "Authentication")]
         public IActionResult Privacy()
         {
             return View();
         }
-        [Authorize]
+        [Authorize(Policy = "Authentication")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
