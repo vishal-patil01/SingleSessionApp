@@ -39,5 +39,10 @@ namespace SingleSession.BusinessLayer.Implementation
             };
             return await _userRepository.Register(user);
         }
+
+        public async Task<bool> UpdateSessionDetails(int userid, string sessionId)
+        {
+            return await _userRepository.UpdateSessionDetails(userid,sessionId);
+        }
     }
 }

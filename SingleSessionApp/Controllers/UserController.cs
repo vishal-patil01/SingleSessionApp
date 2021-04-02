@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using SingleSession.BusinessLayer.Interface;
 using SingleSession.ModelLayer.ViewModel;
+using SingleSessionApp.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,17 +38,21 @@ namespace SingleSessionApp.Controllers
                 var user = await _userService.Login(loginModel);
                 if (user != null)
                 {
+                    var session = Guid.NewGuid().ToString();
                     var claims = new List<Claim>()
                     {
-                    new Claim(ClaimTypes.Name,user.FirstName+" "+user.LastName),
-                    new Claim(ClaimTypes.Email,user.Email),
+                        new Claim(ClaimTypes.Sid,user.ID.ToString()),
+                        new Claim(ClaimTypes.Hash,session),
+                        new Claim(ClaimTypes.Name,user.FirstName+" "+user.LastName),
+                        new Claim(ClaimTypes.Email,user.Email),
                     };
-                    var claimIdenties = new ClaimsIdentity(claims,CookieAuthenticationDefaults.AuthenticationScheme);
+                    await StaticDependencyService.userRepository.AddSession(user.ID,session);
+                    var claimIdenties = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimPrincipal = new ClaimsPrincipal(claimIdenties);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal,
                         new AuthenticationProperties()
                         {
-                            ExpiresUtc = DateTime.UtcNow.AddMinutes(20),
+                            ExpiresUtc = DateTime.UtcNow.AddMinutes(10),
                             IsPersistent = true,
                             AllowRefresh = true
                         });

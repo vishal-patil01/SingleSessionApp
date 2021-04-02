@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SingleSession.ModelLayer.DBModel
 {
@@ -21,5 +22,13 @@ namespace SingleSession.ModelLayer.DBModel
         [DataType(DataType.Password)]
         [Required]
         public string Password { get; set; }
+
+        [DataType(DataType.Text)]
+        [Required]
+        public string SessionId { get; set; }
+
+        [DataType(DataType.DateTime)]
+        [Required]
+        public DateTime LastUpdated { get; set; }
     }
 }

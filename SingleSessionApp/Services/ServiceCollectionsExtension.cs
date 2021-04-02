@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using SingleSession.BusinessLayer.Implementation;
@@ -19,8 +20,12 @@ namespace SingleSessionApp.Services
         {
             services.Configure<ConfigurationProperties>(configuration.GetSection("ConfigurationSettings"));
             ConfigurationManager.AppConfig = services.BuildServiceProvider().GetService<IOptions<ConfigurationProperties>>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddSingleton<IUserService, UserService>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddHttpContextAccessor();
+            StaticDependencyService.userService = services.BuildServiceProvider().GetService<IUserService>();
+            StaticDependencyService.userRepository = services.BuildServiceProvider().GetService<IUserRepository>();
+            StaticDependencyService._httpContextAccessor = services.BuildServiceProvider().GetService<IHttpContextAccessor>();
             return services;
         }
     }
