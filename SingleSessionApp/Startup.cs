@@ -31,6 +31,19 @@ namespace SingleSessionApp
                 {
                     cookie.LoginPath = "/Login";
                     cookie.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                    cookie.AccessDeniedPath = "/User/AccessDenied";
+                    cookie.Events = new CookieAuthenticationEvents
+                    {
+                        OnRedirectToAccessDenied = ctx =>
+                        {
+                            var requestPath = ctx.Request.Path;
+                            if (requestPath.Value == "/SameUser/LoggedIn")
+                            {
+                                ctx.Response.Redirect("/SameUser/LoggedIn");
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
             services.AddAuthorization(options =>
             {

@@ -25,6 +25,8 @@ namespace SingleSessionApp.Services
                     context.Succeed(this);
                     return Task.CompletedTask;
                 }
+                StaticDependencyService._httpContextAccessor.HttpContext.Request.Path = "/SameUser/LoggedIn";
+                return Task.CompletedTask;
             }
             context.Fail();
             return Task.CompletedTask;

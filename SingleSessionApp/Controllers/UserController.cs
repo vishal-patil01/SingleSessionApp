@@ -98,5 +98,12 @@ namespace SingleSessionApp.Controllers
                  });
             return View("Login");
         }
+
+        [HttpGet]
+        [Route("SameUser/LoggedIn")]
+        public IActionResult BlockedUserAccess()
+        {
+            return View("AccessDenied");
+        }
     }
 }
