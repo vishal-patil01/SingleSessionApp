@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -25,6 +26,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                </div>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hello @User?.FindFirst(ClaimTypes.Name).Value</a>
+                    <div class="dropdown-menu">
+                        <a class="nav-link dropdown-item" asp-controller="User" asp-action="Logout">Logout</a>
+                    </div>
                 </div>
             </div>
         </nav>

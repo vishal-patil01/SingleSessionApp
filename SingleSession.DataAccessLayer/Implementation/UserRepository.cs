@@ -62,5 +62,16 @@ namespace SingleSession.DataAccessLayer.Implementation
             });
             return result > 0;
         }
+
+        public async Task<bool> RemoveSession(int userid)
+        {
+            using var db = new SqlConnection(connectionstring);
+            string updateQuery = @"Update Users Set SessionId='' where Id=@UserId;";
+            var result = await db.ExecuteAsync(updateQuery, new
+            {
+                UserId = userid,
+            });
+            return result > 0;
+        }
     }
 }

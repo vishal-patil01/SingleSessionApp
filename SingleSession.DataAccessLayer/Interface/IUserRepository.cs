@@ -12,5 +12,6 @@ namespace SingleSession.DataAccessLayer.Interface
         public Task<bool> Register(User user);
         public Task<bool> AddSession(int id, string session);
         public Task<bool> UpdateSessionDetails(int userid, string sessionId);
+        public Task<bool> RemoveSession(int userid);
     }
 }

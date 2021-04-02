@@ -46,13 +46,13 @@ namespace SingleSessionApp.Controllers
                         new Claim(ClaimTypes.Name,user.FirstName+" "+user.LastName),
                         new Claim(ClaimTypes.Email,user.Email),
                     };
-                    await StaticDependencyService.userRepository.AddSession(user.ID,session);
+                    await StaticDependencyService.userRepository.AddSession(user.ID, session);
                     var claimIdenties = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     var claimPrincipal = new ClaimsPrincipal(claimIdenties);
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimPrincipal,
                         new AuthenticationProperties()
                         {
-                            ExpiresUtc = DateTime.UtcNow.AddMinutes(10),
+                            ExpiresUtc = DateTime.Now.AddMinutes(10),
                             IsPersistent = true,
                             AllowRefresh = true
                         });
@@ -81,6 +81,22 @@ namespace SingleSessionApp.Controllers
                 ModelState.AddModelError("", "Something Went Wrong");
             }
             return View();
+        }
+
+        [HttpGet]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            var userId = HttpContext.User.FindFirst(ClaimTypes.Sid).Value;
+            await StaticDependencyService.userRepository.RemoveSession(int.Parse(userId));
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme,
+                 new AuthenticationProperties()
+                 {
+                     ExpiresUtc = DateTime.Now,
+                     IsPersistent = false,
+                     AllowRefresh = true
+                 });
+            return View("Login");
         }
     }
 }
